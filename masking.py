@@ -18,13 +18,14 @@ upper_red = numpy.array([200,255,255])
 while video.isOpened():
     s,frame = video.read()
     if not s: break
-    frame = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
-    mask1 = cv2.inRange(frame,lower_red,upper_red)
+    hsv_frame = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+    mask1 = cv2.inRange(hsv_frame,lower_red,upper_red)
     mask1 = cv2.morphologyEx(mask1,cv2.MORPH_OPEN,numpy.ones((3,3))) # refines mask
     mask2 = cv2.bitwise_not(mask1) # gets opposite of mask1
     result1 = cv2.bitwise_and(bg,bg,mask=mask1)
     result2 = cv2.bitwise_and(frame,frame,mask=mask2)
     final_result = cv2.add(result1,result2)
     cv2.imshow("video",final_result)
-    cv2.waitKey(10)
+    key = cv2.waitKey(10)
+    if key == 27: break
     #cv2.destroyAllWindows()
